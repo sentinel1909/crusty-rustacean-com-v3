@@ -1,0 +1,14 @@
+# Configuration values in this file are used by all profiles,
+# unless overridden in the profile-specific configuration files
+# or via an environment variable.
+server:
+  port: 8000
+  graceful_shutdown_timeout: "1 minute"
+templateconfig:
+  dir: templates
+  pattern: "**/*"
+  extra_templates: []
+staticserverconfig:
+  mount_path: "/static"
+  root_dir: "static"
+  serve_index: false

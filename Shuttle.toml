@@ -1,0 +1,19 @@
+# Shuttle.toml
+name = "crusty-rustacean-com-v3"
+allow_insecure = false
+
+[deploy]
+include = [
+    "configuration/base.yml",
+    "configuration/prod.yml",
+    "templates/*",
+    "static/*"
+]
+
+[build]
+assets = [
+    "configuration/base.yml",
+    "configuration/prod.yml",
+    "templates/*",
+    "static/*"
+]

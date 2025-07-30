@@ -1,0 +1,15 @@
+[package]
+name = "shuttle"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+app = { path = "../app" }
+opendal = { version = "0.51.1", features = [ "services-fs", "services-s3" ] }
+pavex = "0.2.1"
+server = { path = "../server" }
+server_sdk = { path = "../server_sdk" }
+shuttle-runtime = "0.56.0"
+shuttle-shared-db = { version = "0.56.0", features = ["postgres", "sqlx"] }
+sqlx = "0.8.4"
+tracing = "0.1.41"
