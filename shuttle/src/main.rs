@@ -18,7 +18,7 @@ mod shuttle_pavex;
 #[shuttle_runtime::main]
 async fn pavex(
     #[Postgres] db_pool: PgPool,
-    #[Opendal(scheme = "s3")] op: Operator,
+    #[Opendal(scheme = "s3")] _op: Operator,
     #[Secrets] secrets: SecretStore,
 ) -> shuttle_pavex::ShuttlePavex {
     // run the database migrations
