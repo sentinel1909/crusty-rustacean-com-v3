@@ -15,9 +15,20 @@ mod shuttle_pavex;
 
 #[shuttle_runtime::main]
 async fn pavex(
-    #[Postgres] _app_pool: PgPool,
+    #[Postgres] db_pool: PgPool,
     #[Secrets] secrets: SecretStore,
-) -> shuttle_pavex::ShuttlePavex {
+) -> shuttle_pavex::ShuttlePavex{
+
+    // run the database migrations
+    tracing::info!("Running database migrations...");
+    sqlx::migrate!("./migrations")
+        .run(&db_pool)
+        .await
+        .map_err(|err| {
+            let msg = format!("Unable to run the database migrations: {err}");
+            CustomError::new(err).context(msg)
+        })?;
+
     // get the profile from the secrets
     let profile = secrets.get("PX_PROFILE").unwrap_or_default();
 
@@ -39,11 +50,14 @@ async fn pavex(
             })?;
     tracing::info!("Application configuration loaded: {:?}", app_config);
 
-    let template_engine = TemplateEngine::from_config(&app_config.templateconfig).unwrap();
+    let template_engine = TemplateEngine::from_config(&app_config.templateconfig).map_err(|err| {
+        let error_msg = format!("Unable to build the template engine: {}", err);
+        CustomError::new(err).context(error_msg)
+    })?;
     let static_server = StaticServer::from_config(app_config.staticserverconfig.clone());
 
     // build the application state
-    let app_state = ApplicationState::new(app_config, template_engine, static_server)
+    let app_state = ApplicationState::new(app_config, template_engine, static_server, db_pool)
         .await
         .map_err(|err| {
             let error_msg = format!("Unable to build the application state: {}", err);

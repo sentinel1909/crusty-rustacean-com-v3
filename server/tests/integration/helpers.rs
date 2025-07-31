@@ -46,8 +46,9 @@ impl TestApi {
         // build the template engine and static server with proper error handling
         let template_engine = TemplateEngine::from_config(&config.templateconfig).unwrap();
         let static_server = StaticServer::from_config(config.staticserverconfig.clone());
+        let db_pool = config.databaseconfig.get_pool().await;
 
-        let application_state = ApplicationState::new(config, template_engine, static_server)
+        let application_state = ApplicationState::new(config, template_engine, static_server, db_pool)
             .await
             .expect("Failed to build the application state");
 

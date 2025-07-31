@@ -51,7 +51,9 @@ async fn _main() -> anyhow::Result<()> {
     let template_engine = TemplateEngine::from_config(&config.templateconfig)?;
     let static_server = StaticServer::from_config(config.staticserverconfig.clone());
 
-    let application_state = ApplicationState::new(config, template_engine, static_server)
+    let db_pool = config.databaseconfig.get_pool().await;
+
+    let application_state = ApplicationState::new(config, template_engine, static_server, db_pool)
         .await
         .context("Failed to build the application state")?;
 

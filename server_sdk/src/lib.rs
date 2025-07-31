@@ -11,7 +11,7 @@ pub struct ApplicationConfig {
     #[serde(default)]
     pub cookies: biscotti::ProcessorConfig,
     #[serde(default)]
-    pub databaseconfig: app::configuration::DatabaseConfig,
+    pub databaseconfig: app::configuration::PgPoolConfig,
     pub server: app::configuration::ServerConfig,
     #[serde(default)]
     pub session: pavex_session::SessionConfig,
@@ -30,35 +30,26 @@ impl ApplicationState {
         app_config: crate::ApplicationConfig,
         v0: pavex_tera_template::TemplateEngine,
         v1: pavex_static_files::StaticServer,
+        v2: sqlx_core::pool::Pool<sqlx_postgres::Postgres>,
     ) -> Result<crate::ApplicationState, crate::ApplicationStateError> {
-        Ok(
-            Self::_new(
-                    v0,
-                    v1,
-                    &app_config.databaseconfig,
-                    app_config.session,
-                    app_config.cookies,
-                )
-                .await,
-        )
+        Ok(Self::_new(v0, v1, v2, app_config.session, app_config.cookies).await)
     }
     async fn _new(
         v0: pavex_tera_template::TemplateEngine,
         v1: pavex_static_files::StaticServer,
-        v2: &app::configuration::DatabaseConfig,
+        v2: sqlx_core::pool::Pool<sqlx_postgres::Postgres>,
         v3: pavex_session::SessionConfig,
         v4: biscotti::ProcessorConfig,
     ) -> crate::ApplicationState {
-        let v5 = app::configuration::DatabaseConfig::get_pool(v2).await;
-        let v6 = pavex_session_sqlx::PostgresSessionStore::new(v5);
-        let v7 = <pavex_session::SessionStore as core::convert::From<
+        let v5 = pavex_session_sqlx::PostgresSessionStore::new(v2);
+        let v6 = <pavex_session::SessionStore as core::convert::From<
             pavex_session_sqlx::PostgresSessionStore,
-        >>::from(v6);
-        let v8 = pavex::cookie::config_into_processor(v4);
+        >>::from(v5);
+        let v7 = pavex::cookie::config_into_processor(v4);
         crate::ApplicationState {
-            processor: v8,
+            processor: v7,
             session_config: v3,
-            session_store: v7,
+            session_store: v6,
             static_server: v1,
             template_engine: v0,
         }

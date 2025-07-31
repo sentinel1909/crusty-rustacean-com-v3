@@ -10,7 +10,7 @@ use secrecy::{ExposeSecret, SecretString};
 use serde::Deserialize;
 use serde_aux::field_attributes::deserialize_number_from_string;
 use sqlx::ConnectOptions;
-use sqlx::postgres::{PgConnectOptions, PgPool, PgPoolOptions, PgSslMode};
+use sqlx::postgres::{PgConnectOptions, PgPoolOptions, PgSslMode};
 
 // register a prebuilt type for the template configuration
 #[config(key = "templateconfig", include_if_unused)]
@@ -79,7 +79,7 @@ impl ServerConfig {
 // struct type to represent the database configuration
 #[derive(Clone, Debug, Default, Deserialize)]
 #[config(key = "databaseconfig", include_if_unused, default_if_missing)]
-pub struct DatabaseConfig {
+pub struct PgPoolConfig {
     pub username: String,
     pub password: SecretString,
     #[serde(deserialize_with = "deserialize_number_from_string")]
@@ -91,7 +91,7 @@ pub struct DatabaseConfig {
 
 // methods for the database configuration type
 #[methods]
-impl DatabaseConfig {
+impl PgPoolConfig {
     pub fn with_db(&self) -> PgConnectOptions {
         let options = self.without_db().database(&self.database_name);
         options
@@ -121,3 +121,9 @@ impl DatabaseConfig {
             .connect_lazy_with(self.with_db())
     }
 }
+
+#[config(key = "postgres", include_if_unused, default_if_missing)]
+pub type DatabaseConfig = Option<PgPoolConfig>;
+
+#[prebuilt]
+pub use sqlx::postgres::PgPool;
