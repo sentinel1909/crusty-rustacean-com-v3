@@ -5,7 +5,7 @@ edition.workspace = true
 
 [dependencies]
 app = { path = "../app" }
-opendal = { version = "0.51.1", features = [ "services-fs", "services-s3" ] }
+opendal = { version = "0.51.1", features = [ "services-s3" ] }
 pavex = "0.2.1"
 server = { path = "../server" }
 server_sdk = { path = "../server_sdk" }
