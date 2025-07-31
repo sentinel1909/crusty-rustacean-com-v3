@@ -1,8 +1,8 @@
 // app/src/errors.rs
 
 // dependencies
-use pavex::{error_handler, Response};
 use pavex::http::StatusCode;
+use pavex::{Response, error_handler};
 use pavex_static_files::ServeError;
 use pavex_tera_template::TemplateError;
 use serde::Serialize;

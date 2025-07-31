@@ -17,7 +17,7 @@ unexpected_cfgs = { level = "allow", check-cfg = ['cfg(pavex_ide_hint)'] }
 [dependencies]
 cargo_px_env = "0.1"
 humantime-serde = "1.1"
-opendal = { version = "0.51.1", features = [ "services-fs", "services-s3" ] }
+opendal = { version = "0.51.1", features = ["services-s3"] }
 pavex = { version = "0.2.1" }
 pavex_tracing = { version = "0.2.1" }
 pavex_cli_client = { version = "0.2.1" }

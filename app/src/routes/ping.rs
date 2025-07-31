@@ -1,3 +1,6 @@
+// src/routes/ping.rs
+
+// dependencies
 use pavex::get;
 use pavex::http::StatusCode;
 

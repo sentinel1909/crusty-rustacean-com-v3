@@ -2,10 +2,12 @@
 
 // dependencies
 use app::configuration::{StaticServer, TemplateEngine};
+use opendal::Operator;
 use pavex::config::ConfigLoader;
 use pavex::server::Server;
 use server::configuration::Profile::{Dev, Prod};
 use server_sdk::{ApplicationConfig, ApplicationState};
+use shuttle_opendal::Opendal;
 use shuttle_runtime::{CustomError, SecretStore, Secrets};
 use shuttle_shared_db::Postgres;
 use sqlx::PgPool;
@@ -16,9 +18,9 @@ mod shuttle_pavex;
 #[shuttle_runtime::main]
 async fn pavex(
     #[Postgres] db_pool: PgPool,
+    #[Opendal(scheme = "s3")] op: Operator,
     #[Secrets] secrets: SecretStore,
-) -> shuttle_pavex::ShuttlePavex{
-
+) -> shuttle_pavex::ShuttlePavex {
     // run the database migrations
     tracing::info!("Running database migrations...");
     sqlx::migrate!("./migrations")
@@ -50,10 +52,14 @@ async fn pavex(
             })?;
     tracing::info!("Application configuration loaded: {:?}", app_config);
 
-    let template_engine = TemplateEngine::from_config(&app_config.templateconfig).map_err(|err| {
-        let error_msg = format!("Unable to build the template engine: {}", err);
-        CustomError::new(err).context(error_msg)
-    })?;
+    // build the template engine
+    let template_engine =
+        TemplateEngine::from_config(&app_config.templateconfig).map_err(|err| {
+            let error_msg = format!("Unable to build the template engine: {}", err);
+            CustomError::new(err).context(error_msg)
+        })?;
+    
+    // build the static server
     let static_server = StaticServer::from_config(app_config.staticserverconfig.clone());
 
     // build the application state

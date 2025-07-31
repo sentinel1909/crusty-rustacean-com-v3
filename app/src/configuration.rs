@@ -2,6 +2,7 @@
 //! on how to manage configuration values.
 
 // dependencies
+use opendal::Result;
 use pavex::config;
 use pavex::methods;
 use pavex::prebuilt;
@@ -16,6 +17,7 @@ use sqlx::postgres::{PgConnectOptions, PgPoolOptions, PgSslMode};
 #[config(key = "templateconfig", include_if_unused)]
 pub use pavex_tera_template::TemplateConfig;
 
+// register a prebuilt type for the template engine
 #[prebuilt]
 pub use pavex_tera_template::TemplateEngine;
 
@@ -23,6 +25,7 @@ pub use pavex_tera_template::TemplateEngine;
 #[config(key = "staticserverconfig", include_if_unused)]
 pub use pavex_static_files::StaticServerConfig;
 
+// register a prebuilt type for the static server
 #[prebuilt]
 pub use pavex_static_files::StaticServer;
 
@@ -79,7 +82,7 @@ impl ServerConfig {
 // struct type to represent the database configuration
 #[derive(Clone, Debug, Default, Deserialize)]
 #[config(key = "databaseconfig", include_if_unused, default_if_missing)]
-pub struct PgPoolConfig {
+pub struct DatabaseConfig {
     pub username: String,
     pub password: SecretString,
     #[serde(deserialize_with = "deserialize_number_from_string")]
@@ -91,7 +94,7 @@ pub struct PgPoolConfig {
 
 // methods for the database configuration type
 #[methods]
-impl PgPoolConfig {
+impl DatabaseConfig {
     pub fn with_db(&self) -> PgConnectOptions {
         let options = self.without_db().database(&self.database_name);
         options
@@ -114,16 +117,43 @@ impl PgPoolConfig {
             .ssl_mode(ssl_mode)
     }
 
-    #[singleton]
-    pub async fn get_pool(&self) -> PgPool {
+    pub async fn get_database_pool(&self) -> PgPool {
         PgPoolOptions::new()
             .acquire_timeout(std::time::Duration::from_secs(2))
             .connect_lazy_with(self.with_db())
     }
 }
 
-#[config(key = "postgres", include_if_unused, default_if_missing)]
-pub type DatabaseConfig = Option<PgPoolConfig>;
-
+// register a prebuilt type for the database pool
 #[prebuilt]
 pub use sqlx::postgres::PgPool;
+
+// register a config type for the opendal operator
+#[derive(Clone, Debug, Default, Deserialize)]
+#[config(key = "opendalconfig", include_if_unused, default_if_missing)]
+pub struct OpendalConfig {
+    pub endpoint: String,
+    pub access_key: String,
+    pub secret_key: String,
+    pub bucket: String,
+    pub region: String,
+}
+
+// methods for the opendal configuration type
+#[methods]
+impl OpendalConfig {
+    pub fn get_opendal_operator(&self) -> Result<Operator> {
+        let builder = opendal::services::S3::default()
+        .endpoint(&self.endpoint)
+        .access_key_id(&self.access_key)
+        .secret_access_key(&self.secret_key)
+        .bucket(&self.bucket)
+        .region(&self.region);
+        let op = Operator::new(builder)?.finish();
+        Ok(op)
+    }
+}
+
+// register a prebuilt type for the opendal operator
+#[prebuilt]
+pub use opendal::Operator;

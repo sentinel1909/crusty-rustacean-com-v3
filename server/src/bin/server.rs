@@ -2,7 +2,7 @@
 
 // dependencies
 use anyhow::Context;
-use app::configuration::{StaticServer, TemplateEngine}; 
+use app::configuration::{StaticServer, TemplateEngine};
 use pavex::config::ConfigLoader;
 use pavex::server::{Server, ServerHandle, ShutdownMode};
 use server::{
@@ -51,7 +51,7 @@ async fn _main() -> anyhow::Result<()> {
     let template_engine = TemplateEngine::from_config(&config.templateconfig)?;
     let static_server = StaticServer::from_config(config.staticserverconfig.clone());
 
-    let db_pool = config.databaseconfig.get_pool().await;
+    let db_pool = config.databaseconfig.get_database_pool().await;
 
     let application_state = ApplicationState::new(config, template_engine, static_server, db_pool)
         .await

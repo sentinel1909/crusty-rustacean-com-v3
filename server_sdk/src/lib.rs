@@ -11,7 +11,9 @@ pub struct ApplicationConfig {
     #[serde(default)]
     pub cookies: biscotti::ProcessorConfig,
     #[serde(default)]
-    pub databaseconfig: app::configuration::PgPoolConfig,
+    pub databaseconfig: app::configuration::DatabaseConfig,
+    #[serde(default)]
+    pub opendalconfig: app::configuration::OpendalConfig,
     pub server: app::configuration::ServerConfig,
     #[serde(default)]
     pub session: pavex_session::SessionConfig,

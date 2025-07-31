@@ -48,9 +48,10 @@ impl TestApi {
         let static_server = StaticServer::from_config(config.staticserverconfig.clone());
         let db_pool = config.databaseconfig.get_pool().await;
 
-        let application_state = ApplicationState::new(config, template_engine, static_server, db_pool)
-            .await
-            .expect("Failed to build the application state");
+        let application_state =
+            ApplicationState::new(config, template_engine, static_server, db_pool)
+                .await
+                .expect("Failed to build the application state");
 
         tokio::spawn(async move { run(server_builder, application_state).await });
 

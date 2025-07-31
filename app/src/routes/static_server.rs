@@ -33,7 +33,10 @@ impl TypedBody for ServedStaticFile {
 
 // handler function which responds with a 200 OK and the requested static file
 #[get(path = "/static/{path}")]
-pub fn get_static_file(static_server: &StaticServer, request_head: &RequestHead) -> Result<Response, ApiError> {
+pub fn get_static_file(
+    static_server: &StaticServer,
+    request_head: &RequestHead,
+) -> Result<Response, ApiError> {
     let request_path = request_head.target.path();
 
     let file = static_server.read_file(request_path)?;
