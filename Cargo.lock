@@ -104,7 +104,7 @@ checksum = "e16d2d3311acee920a9eb8d33b8cbc1787ce4a264e85f964c2404b969bdcd487"
 
 [[package]]
 name = "app"
-version = "0.3.1"
+version = "0.3.2"
 dependencies = [
  "cargo_px_env",
  "humantime-serde",
@@ -3031,7 +3031,7 @@ dependencies = [
 
 [[package]]
 name = "server"
-version = "0.3.1"
+version = "0.3.2"
 dependencies = [
  "anyhow",
  "app",
@@ -3050,7 +3050,7 @@ dependencies = [
 
 [[package]]
 name = "server_sdk"
-version = "0.3.1"
+version = "0.3.2"
 dependencies = [
  "app",
  "biscotti",
@@ -3108,7 +3108,7 @@ checksum = "0fda2ff0d084019ba4d7c6f371c95d8fd75ce3524c3cb8fb653a3023f6323e64"
 
 [[package]]
 name = "shuttle"
-version = "0.3.1"
+version = "0.3.2"
 dependencies = [
  "app",
  "opendal",

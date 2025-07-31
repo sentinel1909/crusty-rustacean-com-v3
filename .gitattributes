@@ -1,0 +1,8 @@
+# Always use LF for SQL migrations and source code
+*.rs     text eol=lf
+*.sql    text eol=lf
+*.toml   text eol=lf
+*.md     text eol=lf
+*.yml    text eol=lf
+*.yaml   text eol=lf
+*.sh     text eol=lf
