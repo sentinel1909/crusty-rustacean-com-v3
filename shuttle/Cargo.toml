@@ -10,7 +10,7 @@ pavex = "0.2.1"
 server = { path = "../server" }
 server_sdk = { path = "../server_sdk" }
 shuttle-opendal = "0.56.0"
-shuttle-runtime = "0.56.0"
+shuttle-runtime = { version = "0.56.0", default-features = false }
 shuttle-shared-db = { version = "0.56.0", features = ["postgres", "sqlx"] }
 sqlx = "0.8.4"
 tracing = "0.1.41"

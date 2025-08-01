@@ -104,7 +104,7 @@ checksum = "e16d2d3311acee920a9eb8d33b8cbc1787ce4a264e85f964c2404b969bdcd487"
 
 [[package]]
 name = "app"
-version = "0.3.2"
+version = "0.4.0"
 dependencies = [
  "cargo_px_env",
  "humantime-serde",
@@ -3031,7 +3031,7 @@ dependencies = [
 
 [[package]]
 name = "server"
-version = "0.3.2"
+version = "0.4.0"
 dependencies = [
  "anyhow",
  "app",
@@ -3050,13 +3050,14 @@ dependencies = [
 
 [[package]]
 name = "server_sdk"
-version = "0.3.2"
+version = "0.4.0"
 dependencies = [
  "app",
  "biscotti",
  "http",
  "hyper",
  "matchit",
+ "opendal",
  "pavex",
  "pavex_session",
  "pavex_session_sqlx",
@@ -3108,7 +3109,7 @@ checksum = "0fda2ff0d084019ba4d7c6f371c95d8fd75ce3524c3cb8fb653a3023f6323e64"
 
 [[package]]
 name = "shuttle"
-version = "0.3.2"
+version = "0.4.0"
 dependencies = [
  "app",
  "opendal",
@@ -3217,7 +3218,6 @@ dependencies = [
  "strfmt",
  "tokio",
  "tracing",
- "tracing-subscriber",
 ]
 
 [[package]]
@@ -4038,16 +4038,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "tracing-serde"
-version = "0.2.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "704b1aeb7be0d0a84fc9828cae51dab5970fee5088f83d1dd7ee6f6246fc6ff1"
-dependencies = [
- "serde",
- "tracing-core",
-]
-
-[[package]]
 name = "tracing-subscriber"
 version = "0.3.19"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -4057,15 +4047,12 @@ dependencies = [
  "nu-ansi-term",
  "once_cell",
  "regex",
- "serde",
- "serde_json",
  "sharded-slab",
  "smallvec",
  "thread_local",
  "tracing",
  "tracing-core",
  "tracing-log 0.2.0",
- "tracing-serde",
 ]
 
 [[package]]

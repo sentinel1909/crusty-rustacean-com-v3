@@ -1,7 +1,7 @@
 // server/tests/integration/helpers.rs
 
 // dependencies
-use app::configuration::{StaticServer, TemplateEngine};
+use app::configuration::{OpendalConfig, StaticServer, TemplateEngine};
 use pavex::{config::ConfigLoader, server::Server};
 use server::configuration::Profile;
 use server_sdk::{ApplicationConfig, ApplicationState, run};
@@ -46,10 +46,11 @@ impl TestApi {
         // build the template engine and static server with proper error handling
         let template_engine = TemplateEngine::from_config(&config.templateconfig).unwrap();
         let static_server = StaticServer::from_config(config.staticserverconfig.clone());
-        let db_pool = config.databaseconfig.get_pool().await;
+        let db_pool = config.databaseconfig.get_database_pool().await;
+        let op = OpendalConfig::get_opendal_operator(&config.opendalconfig).unwrap();
 
         let application_state =
-            ApplicationState::new(config, template_engine, static_server, db_pool)
+            ApplicationState::new(config, template_engine, static_server, db_pool, op)
                 .await
                 .expect("Failed to build the application state");
 

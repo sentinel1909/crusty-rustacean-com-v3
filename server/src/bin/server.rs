@@ -2,7 +2,7 @@
 
 // dependencies
 use anyhow::Context;
-use app::configuration::{StaticServer, TemplateEngine};
+use app::configuration::{OpendalConfig, StaticServer, TemplateEngine};
 use pavex::config::ConfigLoader;
 use pavex::server::{Server, ServerHandle, ShutdownMode};
 use server::{
@@ -53,7 +53,9 @@ async fn _main() -> anyhow::Result<()> {
 
     let db_pool = config.databaseconfig.get_database_pool().await;
 
-    let application_state = ApplicationState::new(config, template_engine, static_server, db_pool)
+    let op = OpendalConfig::get_opendal_operator(&config.opendalconfig).unwrap();
+
+    let application_state = ApplicationState::new(config, template_engine, static_server, db_pool, op)
         .await
         .context("Failed to build the application state")?;
 

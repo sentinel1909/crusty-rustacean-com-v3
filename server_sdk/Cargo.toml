@@ -16,11 +16,12 @@ verifier_args = ["--check"]
 clippy = { all = "allow" }
 
 [dependencies]
-app = { version = "0.3", path = "../app", default-features = false }
+app = { version = "0.4", path = "../app", default-features = false }
 biscotti = { version = "0.4", default-features = false }
 http = { version = "1", default-features = false }
 hyper = { version = "1", default-features = false }
 matchit = { version = "0.8", default-features = false }
+opendal = { version = "0.51", default-features = false }
 pavex = { version = "0.2", default-features = false }
 pavex_session = { version = "0.2", default-features = false }
 pavex_session_sqlx = { version = "0.2", default-features = false }
