@@ -55,9 +55,10 @@ async fn _main() -> anyhow::Result<()> {
 
     let op = OpendalConfig::get_opendal_operator(&config.opendalconfig).unwrap();
 
-    let application_state = ApplicationState::new(config, template_engine, static_server, db_pool, op)
-        .await
-        .context("Failed to build the application state")?;
+    let application_state =
+        ApplicationState::new(config, template_engine, static_server, db_pool, op)
+            .await
+            .context("Failed to build the application state")?;
 
     tracing::info!("Starting to listen for incoming requests at {}", address);
     let server_handle = run(server_builder, application_state);

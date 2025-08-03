@@ -144,11 +144,11 @@ pub struct OpendalConfig {
 impl OpendalConfig {
     pub fn get_opendal_operator(&self) -> Result<Operator> {
         let builder = opendal::services::S3::default()
-        .endpoint(&self.endpoint)
-        .access_key_id(&self.access_key)
-        .secret_access_key(&self.secret_key)
-        .bucket(&self.bucket)
-        .region(&self.region);
+            .endpoint(&self.endpoint)
+            .access_key_id(&self.access_key)
+            .secret_access_key(&self.secret_key)
+            .bucket(&self.bucket)
+            .region(&self.region);
         let op = Operator::new(builder)?.finish();
         Ok(op)
     }
